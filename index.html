@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My German Gym — Train Your Grammar</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --black:    #090909;
+      --surface:  #111111;
+      --card:     #181818;
+      --border:   #262626;
+      --border2:  #333333;
+      --lime:     #C9FF47;
+      --lime-dim: rgba(201, 255, 71, 0.12);
+      --lime-glow:rgba(201, 255, 71, 0.06);
+      --white:    #EEEEE9;
+      --muted:    #5A5A5A;
+      --muted2:   #888888;
+      --orange:   #FF6B35;
+      --green-ok: #5CCC6A;
+      --red-err:  #FF4D4D;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Outfit', sans-serif;
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* Grain overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9998;
+    }
+
+    .display  { font-family: 'Bebas Neue', sans-serif; }
+    .serif    { font-family: 'Cormorant Garamond', serif; }
+    .sans     { font-family: 'Outfit', sans-serif; }
+
+    /* ─── SCROLL FADE-IN ─── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+    /* ─── NAVIGATION ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 56px;
+      background: rgba(9,9,9,0.82);
+      backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo-wrap { display: flex; align-items: center; gap: 14px; cursor: pointer; text-decoration: none; }
+
+    .logo-text-block { display: flex; flex-direction: column; line-height: 1; }
+    .logo-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 19px; letter-spacing: 0.1em; color: var(--white);
+    }
+    .logo-tagline {
+      font-size: 8.5px; font-weight: 600; letter-spacing: 0.3em;
+      text-transform: uppercase; color: var(--muted2);
+    }
+
+    .nav-right { display: flex; align-items: center; gap: 36px; }
+    .nav-link {
+      font-size: 11px; font-weight: 500; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--muted2);
+      background: none; border: none; cursor: pointer;
+      transition: color 0.2s;
+    }
+    .nav-link:hover { color: var(--white); }
+
+    .nav-cta {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--black);
+      background: var(--lime); border: none;
+      padding: 10px 26px; cursor: pointer;
+      transition: transform 0.15s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.15s;
+    }
+    .nav-cta:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 24px rgba(201,255,71,0.28);
+    }
+    .nav-cta:active { transform: translateY(0); }
+
+    /* ─── HERO ─── */
+    #landing { display: block; }
+    #exercise-page { display: none; }
+    #brand-page { display: none; }
+
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 130px 56px 80px;
+      position: relative; overflow: hidden;
+    }
+
+    .hero-glow-1 {
+      position: absolute; top: -250px; right: -150px;
+      width: 900px; height: 900px;
+      background: radial-gradient(circle, rgba(201,255,71,0.055) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .hero-glow-2 {
+      position: absolute; bottom: -100px; left: -100px;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(255,107,53,0.04) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .hero-eyebrow {
+      display: flex; align-items: center; gap: 14px; margin-bottom: 28px;
+    }
+    .eyebrow-line { width: 44px; height: 1px; background: var(--lime); }
+    .eyebrow-text {
+      font-size: 10.5px; font-weight: 600; letter-spacing: 0.3em;
+      text-transform: uppercase; color: var(--lime);
+    }
+
+    .hero-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(68px, 11.5vw, 158px);
+      line-height: 0.87;
+      color: var(--white);
+      margin-bottom: 36px;
+      max-width: 960px;
+    }
+    .hero-title .accent { color: var(--lime); }
+
+    .hero-sub {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(17px, 2.2vw, 24px);
+      font-style: italic; font-weight: 300;
+      color: var(--muted2);
+      max-width: 500px; line-height: 1.65;
+      margin-bottom: 52px;
+    }
+
+    .hero-actions { display: flex; align-items: center; gap: 20px; }
+
+    .btn-primary {
+      font-size: 12px; font-weight: 600; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--black);
+      background: var(--lime); border: none;
+      padding: 17px 44px; cursor: pointer;
+      transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 36px rgba(201,255,71,0.32);
+    }
+    .btn-primary:active { transform: translateY(0); }
+
+    .btn-ghost {
+      font-size: 12px; font-weight: 500; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--muted2);
+      background: none; border: 1px solid var(--border2);
+      padding: 16px 36px; cursor: pointer;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .btn-ghost:hover { color: var(--white); border-color: var(--muted2); }
+
+    .hero-stats {
+      display: flex; gap: 60px;
+      margin-top: 80px; padding-top: 48px;
+      border-top: 1px solid var(--border);
+    }
+    .stat-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 42px; color: var(--white); line-height: 1;
+    }
+    .stat-label {
+      font-size: 10px; font-weight: 600; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--muted);
+      margin-top: 4px;
+    }
+
+    /* Decorative vertical text */
+    .hero-vert {
+      position: absolute; right: 56px; top: 50%; transform: translateY(-50%) rotate(90deg);
+      transform-origin: center center;
+      font-size: 9.5px; font-weight: 500; letter-spacing: 0.3em;
+      text-transform: uppercase; color: var(--muted);
+      white-space: nowrap;
+    }
+
+    /* ─── PRACTICE SECTION ─── */
+    .practice-section {
+      padding: 100px 56px;
+    }
+
+    .sec-header {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      margin-bottom: 56px;
+    }
+    .sec-tag {
+      font-size: 10.5px; font-weight: 600; letter-spacing: 0.28em;
+      text-transform: uppercase; color: var(--lime); margin-bottom: 10px;
+    }
+    .sec-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(38px, 5.5vw, 66px);
+      color: var(--white); line-height: 1;
+    }
+    .sec-desc {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 17px; font-style: italic;
+      color: var(--muted2); max-width: 280px;
+      text-align: right; line-height: 1.55;
+    }
+
+    .practice-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+
+    .pcard {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 40px 36px;
+      position: relative; overflow: hidden;
+      transition: border-color 0.28s, transform 0.22s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .pcard::before {
+      content: ''; position: absolute; inset: 0;
+      background: var(--lime-glow); opacity: 0;
+      transition: opacity 0.28s;
+    }
+    .pcard.available { cursor: pointer; }
+    .pcard.available:hover::before { opacity: 1; }
+    .pcard.available:hover {
+      border-color: rgba(201,255,71,0.35);
+      transform: translateY(-3px);
+    }
+    .pcard.locked { opacity: 0.42; cursor: not-allowed; }
+    .pcard.locked:hover { transform: none; border-color: var(--border); }
+    .pcard.locked::before { display: none; }
+
+    .pcard-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 80px; line-height: 1;
+      color: var(--border2); margin-bottom: 20px;
+      transition: color 0.28s;
+    }
+    .pcard.available:hover .pcard-num { color: rgba(201,255,71,0.55); }
+
+    .pcard-level {
+      font-size: 9.5px; font-weight: 600; letter-spacing: 0.28em;
+      text-transform: uppercase; color: var(--lime); margin-bottom: 6px;
+    }
+    .pcard-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 30px; color: var(--white);
+      letter-spacing: 0.03em; margin-bottom: 4px;
+    }
+    .pcard-de {
+      font-size: 11px; font-weight: 400; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--muted2); margin-bottom: 20px;
+    }
+    .pcard-desc {
+      font-size: 13.5px; font-weight: 300;
+      color: rgba(238,238,233,0.55); line-height: 1.65;
+      margin-bottom: 36px;
+    }
+    .pcard-status {
+      display: flex; align-items: center; gap: 8px;
+    }
+    .sdot {
+      width: 5px; height: 5px; border-radius: 50%;
+    }
+    .sdot.on { background: var(--lime); }
+    .sdot.off { background: var(--muted); }
+    .stext {
+      font-size: 10px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase;
+    }
+    .stext.on { color: var(--lime); }
+    .stext.off { color: var(--muted); }
+
+    .pcard-arrow {
+      position: absolute; bottom: 36px; right: 36px;
+      width: 38px; height: 38px;
+      display: flex; align-items: center; justify-content: center;
+      border: 1px solid var(--border2);
+      transition: background 0.22s, border-color 0.22s;
+    }
+    .pcard.available:hover .pcard-arrow {
+      background: var(--lime); border-color: var(--lime);
+    }
+    .pcard.available:hover .pcard-arrow svg { stroke: var(--black); }
+
+    /* ─── HOW IT WORKS ─── */
+    .how-section {
+      padding: 100px 56px;
+      border-top: 1px solid var(--border);
+    }
+
+    .steps-row {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 2px; margin-top: 64px;
+    }
+    .step {
+      padding: 48px 36px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .step-n {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 56px; color: var(--lime); line-height: 1; margin-bottom: 20px;
+    }
+    .step-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 24px; color: var(--white); margin-bottom: 12px;
+    }
+    .step-desc { font-size: 14px; font-weight: 300; color: var(--muted2); line-height: 1.65; }
+
+    /* ─── BRAND GUIDELINES ─── */
+    .brand-section {
+      padding: 100px 56px;
+      border-top: 1px solid var(--border);
+    }
+
+    .brand-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 2px; margin-top: 56px;
+    }
+    .brand-block {
+      padding: 48px 40px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+    }
+    .brand-block-title {
+      font-size: 10px; font-weight: 600; letter-spacing: 0.28em;
+      text-transform: uppercase; color: var(--lime); margin-bottom: 28px;
+    }
+
+    /* Color swatches */
+    .swatch-row { display: flex; flex-wrap: wrap; gap: 12px; }
+    .swatch {
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .swatch-box {
+      width: 72px; height: 56px;
+      border: 1px solid var(--border2);
+    }
+    .swatch-name {
+      font-size: 10px; font-weight: 500; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--muted2);
+    }
+    .swatch-hex { font-size: 10px; color: var(--muted); font-family: monospace; }
+
+    /* Logo large display */
+    .logo-display {
+      display: flex; align-items: center; justify-content: center;
+      padding: 60px 0; gap: 24px;
+    }
+    .logo-display-dark {
+      background: var(--black); border: 1px solid var(--border2);
+      padding: 40px 60px;
+      display: flex; align-items: center; gap: 18px;
+    }
+    .logo-display-light {
+      background: #EEEEE9; border: 1px solid #DDD;
+      padding: 40px 60px;
+      display: flex; align-items: center; gap: 18px;
+    }
+
+    /* Typography specimens */
+    .type-specimen { margin-bottom: 28px; padding-bottom: 28px; border-bottom: 1px solid var(--border); }
+    .type-specimen:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .type-label {
+      font-size: 9px; font-weight: 600; letter-spacing: 0.3em;
+      text-transform: uppercase; color: var(--muted); margin-bottom: 8px;
+    }
+    .type-sample-display { font-family: 'Bebas Neue', sans-serif; font-size: 40px; color: var(--white); }
+    .type-sample-serif { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-style: italic; color: var(--white); }
+    .type-sample-body { font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 300; color: var(--muted2); line-height: 1.65; }
+    .type-meta { font-size: 10px; font-family: monospace; color: var(--muted); margin-top: 6px; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      padding: 48px 56px;
+      border-top: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .footer-copy { font-size: 12px; font-weight: 300; color: var(--muted); }
+    .footer-right {
+      display: flex; gap: 32px;
+    }
+    .footer-link {
+      font-size: 11px; font-weight: 500; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--muted);
+      cursor: pointer; transition: color 0.2s; background: none; border: none;
+    }
+    .footer-link:hover { color: var(--white); }
+
+    /* ─── EXERCISE PAGE ─── */
+    .ex-header {
+      padding: 110px 56px 40px;
+      border-bottom: 1px solid var(--border);
+    }
+    .ex-back {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: 11px; font-weight: 500; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--muted2);
+      background: none; border: none; cursor: pointer;
+      margin-bottom: 36px;
+      transition: color 0.2s;
+    }
+    .ex-back:hover { color: var(--white); }
+    .ex-back svg { transition: transform 0.2s; }
+    .ex-back:hover svg { transform: translateX(-3px); }
+
+    .ex-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(48px, 7vw, 88px);
+      color: var(--white); line-height: 0.9; margin-bottom: 16px;
+    }
+    .ex-title .lime { color: var(--lime); }
+    .ex-subtitle {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px; font-style: italic; font-weight: 300;
+      color: var(--muted2);
+    }
+
+    /* Rule box */
+    .rule-box {
+      margin: 40px 56px;
+      padding: 28px 36px;
+      border: 1px solid rgba(201,255,71,0.2);
+      background: rgba(201,255,71,0.04);
+    }
+    .rule-box-label {
+      font-size: 9.5px; font-weight: 600; letter-spacing: 0.28em;
+      text-transform: uppercase; color: var(--lime); margin-bottom: 10px;
+    }
+    .rule-box p {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 16px; color: var(--muted2); line-height: 1.65;
+    }
+    .rule-box strong { color: var(--white); font-weight: 600; }
+
+    /* Exercises container */
+    .ex-body { padding: 0 56px 80px; }
+
+    .para-block {
+      margin-top: 52px;
+      padding-top: 48px;
+      border-top: 1px solid var(--border);
+    }
+    .para-block:first-child { border-top: none; margin-top: 32px; }
+
+    .para-label {
+      font-size: 9.5px; font-weight: 600; letter-spacing: 0.3em;
+      text-transform: uppercase; color: var(--muted); margin-bottom: 10px;
+    }
+    .para-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px; color: var(--white); margin-bottom: 24px;
+    }
+    .para-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px; font-weight: 300;
+      color: var(--white); line-height: 1.9;
+    }
+
+    .blank-wrap {
+      display: inline-flex; flex-direction: column; align-items: center;
+      margin: 0 3px; vertical-align: bottom; position: relative;
+    }
+    .correct-above {
+      display: none;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 15px; font-weight: 700;
+      color: var(--green-ok);
+      line-height: 1; margin-bottom: 3px;
+      white-space: nowrap;
+    }
+    .correct-above.show { display: block; }
+
+    .blank-input {
+      display: inline-block;
+      width: 88px; text-align: center;
+      border: none; border-bottom: 2px solid var(--lime);
+      background: transparent;
+      color: var(--white);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px; font-weight: 600;
+      padding: 0 4px 3px;
+      outline: none;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .blank-input:focus { border-color: var(--white); }
+    .blank-input.correct {
+      border-color: var(--green-ok);
+      color: var(--green-ok);
+    }
+    .blank-input.incorrect {
+      border-color: var(--red-err);
+      color: var(--red-err);
+      text-decoration: line-through;
+      text-decoration-color: var(--red-err);
+      text-decoration-thickness: 2px;
+    }
+    .blank-input.empty-checked {
+      border-color: rgba(92,204,106,0.4);
+    }
+
+    /* Check & Reset buttons */
+    .ex-actions {
+      display: flex; gap: 16px; margin-top: 48px; flex-wrap: wrap;
+    }
+
+    /* Responsive tweaks */
+    @media (max-width: 900px) {
+      nav { padding: 16px 24px; }
+      .hero { padding: 110px 24px 60px; }
+      .practice-section, .how-section, .brand-section { padding: 70px 24px; }
+      .practice-grid, .steps-row, .brand-grid { grid-template-columns: 1fr; }
+      .sec-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+      .sec-desc { text-align: left; }
+      .hero-stats { gap: 36px; flex-wrap: wrap; }
+      .hero-vert { display: none; }
+      .ex-header, .ex-body, .progress-bar-wrap, .rule-box { padding-left: 24px; padding-right: 24px; }
+      footer { flex-direction: column; gap: 20px; text-align: center; }
+      .footer-right { justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════ NAVIGATION ═══════════════════════════════ -->
+<nav>
+  <div class="logo-wrap" onclick="showPage('landing')">
+    <!-- Logo SVG: barbell with MG -->
+    <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Outer glow ring -->
+      <circle cx="22" cy="22" r="21" stroke="#C9FF47" stroke-width="1" opacity="0.25"/>
+      <!-- Barbell shape -->
+      <rect x="6" y="20" width="32" height="4" rx="2" fill="#C9FF47" opacity="0.18"/>
+      <!-- Left weight plate -->
+      <rect x="5" y="14" width="7" height="16" rx="2" fill="#C9FF47"/>
+      <!-- Right weight plate -->
+      <rect x="32" y="14" width="7" height="16" rx="2" fill="#C9FF47"/>
+      <!-- Left inner plate detail -->
+      <rect x="6.5" y="16" width="4" height="12" rx="1" fill="#0A0A0A" opacity="0.35"/>
+      <!-- Right inner plate detail -->
+      <rect x="33.5" y="16" width="4" height="12" rx="1" fill="#0A0A0A" opacity="0.35"/>
+      <!-- Center grip lines -->
+      <rect x="17" y="19" width="1.5" height="6" rx="0.5" fill="#C9FF47" opacity="0.6"/>
+      <rect x="20" y="19" width="1.5" height="6" rx="0.5" fill="#C9FF47" opacity="0.6"/>
+      <rect x="23" y="19" width="1.5" height="6" rx="0.5" fill="#C9FF47" opacity="0.6"/>
+      <rect x="26" y="19" width="1.5" height="6" rx="0.5" fill="#C9FF47" opacity="0.6"/>
+    </svg>
+    <div class="logo-text-block">
+      <span class="logo-name">MY GERMAN GYM</span>
+      <span class="logo-tagline">Grammar Training</span>
+    </div>
+  </div>
+
+  <div class="nav-right">
+    <button class="nav-link" onclick="showPage('landing')">Exercises</button>
+    <button class="nav-cta" onclick="scrollToPractice()">Start Training</button>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════ LANDING PAGE ═══════════════════════════════ -->
+<div id="landing">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-glow-1"></div>
+    <div class="hero-glow-2"></div>
+    <div class="hero-vert">German Grammar Training Platform</div>
+
+    <div class="hero-eyebrow fade-up">
+      <div class="eyebrow-line"></div>
+      <span class="eyebrow-text">Dein Grammatik Training</span>
+    </div>
+
+    <h1 class="hero-title fade-up">
+      TRAIN YOUR<br>
+      <span class="accent">GERMAN</span><br>
+      GRAMMAR
+    </h1>
+
+    <p class="hero-sub fade-up">
+      Precision exercises for every case, every rule — built like a gym programme for your language skills.
+    </p>
+
+    <div class="hero-actions fade-up">
+      <button class="btn-primary" onclick="scrollToPractice()">Choose a Module</button>
+    </div>
+
+    <div class="hero-stats fade-up">
+      <div>
+        <div class="stat-num">4</div>
+        <div class="stat-label">Grammatical Cases</div>
+      </div>
+      <div>
+        <div class="stat-num">24+</div>
+        <div class="stat-label">Exercise Paragraphs</div>
+      </div>
+      <div>
+        <div class="stat-num">6</div>
+        <div class="stat-label">Training Modules</div>
+      </div>
+      <div>
+        <div class="stat-num">A1–C2</div>
+        <div class="stat-label">All Levels</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRACTICE MODULES -->
+  <section class="practice-section" id="practice-section">
+    <div class="sec-header fade-up">
+      <div>
+        <span class="sec-tag">Training Modules</span>
+        <h2 class="sec-title">CHOOSE YOUR<br>WORKOUT</h2>
+      </div>
+      <p class="sec-desc">Select a grammar module to begin your structured training session.</p>
+    </div>
+
+    <div class="practice-grid">
+
+      <!-- NOMINATIV — Active -->
+      <div class="pcard available fade-up" onclick="startExercise('nominativ')">
+        <div class="pcard-num">01</div>
+        <div class="pcard-level">Level A1 — Available Now</div>
+        <div class="pcard-title">NOMINATIV</div>
+        <div class="pcard-de">Der Nominativ</div>
+        <p class="pcard-desc">Master the subject case — who or what performs the action. Practise definite articles, indefinite articles, and personal pronouns in context.</p>
+        <div class="pcard-status">
+          <div class="sdot on"></div>
+          <span class="stext on">Ready to Train</span>
+        </div>
+        <div class="pcard-arrow">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2 7H12M12 7L7.5 2.5M12 7L7.5 11.5" stroke="#888" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- AKKUSATIV — Locked -->
+      <div class="pcard locked fade-up">
+        <div class="pcard-num">02</div>
+        <div class="pcard-level">Level A2 — Coming Soon</div>
+        <div class="pcard-title">AKKUSATIV</div>
+        <div class="pcard-de">Der Akkusativ</div>
+        <p class="pcard-desc">The direct object case — what receives the action. Practise articles, pronouns, and prepositions that govern the accusative.</p>
+        <div class="pcard-status">
+          <div class="sdot off"></div>
+          <span class="stext off">Locked</span>
+        </div>
+        <div class="pcard-arrow">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2v10M4 9l3 3 3-3" stroke="#555" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+
+      <!-- DATIV — Locked -->
+      <div class="pcard locked fade-up">
+        <div class="pcard-num">03</div>
+        <div class="pcard-level">Level B1 — Coming Soon</div>
+        <div class="pcard-title">DATIV</div>
+        <div class="pcard-de">Der Dativ</div>
+        <p class="pcard-desc">The indirect object case — to/for whom. Master dative articles, pronouns, and the prepositions that always take dative.</p>
+        <div class="pcard-status">
+          <div class="sdot off"></div>
+          <span class="stext off">Locked</span>
+        </div>
+        <div class="pcard-arrow">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2v10M4 9l3 3 3-3" stroke="#555" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+
+      <!-- GENITIV — Locked -->
+      <div class="pcard locked fade-up">
+        <div class="pcard-num">04</div>
+        <div class="pcard-level">Level B2 — Coming Soon</div>
+        <div class="pcard-title">GENITIV</div>
+        <div class="pcard-de">Der Genitiv</div>
+        <p class="pcard-desc">The possessive case — showing ownership and relationship. Practise genitive articles, adjective endings, and genitive prepositions.</p>
+        <div class="pcard-status">
+          <div class="sdot off"></div>
+          <span class="stext off">Locked</span>
+        </div>
+        <div class="pcard-arrow">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2v10M4 9l3 3 3-3" stroke="#555" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+
+      <!-- VERBEN — Locked -->
+      <div class="pcard locked fade-up">
+        <div class="pcard-num">05</div>
+        <div class="pcard-level">Level A2 — Coming Soon</div>
+        <div class="pcard-title">VERBEN</div>
+        <div class="pcard-de">Verb Conjugation</div>
+        <p class="pcard-desc">Present, past, and perfect tense conjugations. Regular, irregular, and mixed verbs in context-rich paragraphs.</p>
+        <div class="pcard-status">
+          <div class="sdot off"></div>
+          <span class="stext off">Locked</span>
+        </div>
+        <div class="pcard-arrow">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2v10M4 9l3 3 3-3" stroke="#555" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+
+      <!-- ADJEKTIVE — Locked -->
+      <div class="pcard locked fade-up">
+        <div class="pcard-num">06</div>
+        <div class="pcard-level">Level B1 — Coming Soon</div>
+        <div class="pcard-title">ADJEKTIVE</div>
+        <div class="pcard-de">Adjective Endings</div>
+        <p class="pcard-desc">Strong, weak, and mixed adjective declension. Learn to apply the correct ending for every case and article combination.</p>
+        <div class="pcard-status">
+          <div class="sdot off"></div>
+          <span class="stext off">Locked</span>
+        </div>
+        <div class="pcard-arrow">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2v10M4 9l3 3 3-3" stroke="#555" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how-section">
+    <div class="sec-header fade-up">
+      <div>
+        <span class="sec-tag">The Method</span>
+        <h2 class="sec-title">HOW IT<br>WORKS</h2>
+      </div>
+    </div>
+
+    <div class="steps-row">
+      <div class="step fade-up">
+        <div class="step-n">01</div>
+        <div class="step-title">PICK A MODULE</div>
+        <p class="step-desc">Choose a grammar topic from the training board. Each module targets one specific case or grammar rule with focused precision.</p>
+      </div>
+      <div class="step fade-up">
+        <div class="step-n">02</div>
+        <div class="step-title">FILL THE BLANKS</div>
+        <p class="step-desc">Read authentic German paragraphs with key words removed. Type the correct article, pronoun, or word form in each blank.</p>
+      </div>
+      <div class="step fade-up">
+        <div class="step-n">03</div>
+        <div class="step-title">CHECK & REVIEW</div>
+        <p class="step-desc">Submit your answers to see instant feedback. Review explanations for each blank to understand exactly why each answer is correct.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="fade-up">
+    <div class="footer-copy">© 2026 My German Gym. Train smart, speak better.</div>
+    <div class="footer-right">
+      <button class="footer-link" onclick="scrollToPractice()">Exercises</button>
+    </div>
+  </footer>
+
+</div><!-- end #landing -->
+
+
+<!-- ═══════════════════════════════ EXERCISE PAGE ═══════════════════════════════ -->
+<div id="exercise-page">
+
+  <!-- Header -->
+  <div class="ex-header">
+    <button class="ex-back" onclick="showPage('landing')">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M14 8H2M2 8L7 3M2 8L7 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Back to Modules
+    </button>
+    <div>
+      <div style="font-size:10px;font-weight:600;letter-spacing:0.28em;text-transform:uppercase;color:var(--lime);margin-bottom:10px;">Module 01 — Level A1</div>
+      <h1 class="ex-title">DER <span class="lime">NOMINATIV</span></h1>
+      <p class="ex-subtitle">The Subject Case — who or what performs the action</p>
+    </div>
+  </div>
+
+  <!-- Grammar rule summary -->
+  <div class="rule-box">
+    <div class="rule-box-label">Grammar Rule</div>
+    <p>
+      The <strong>Nominative case</strong> is used for the <strong>subject</strong> of a sentence — the person or thing performing the action.
+      Definite articles: <strong>der</strong> (masc.), <strong>die</strong> (fem.), <strong>das</strong> (neut.), <strong>die</strong> (pl.).
+      Indefinite articles: <strong>ein</strong> (masc./neut.), <strong>eine</strong> (fem.).
+      Personal pronouns: <strong>ich, du, er, sie, es, wir, ihr, sie, Sie</strong>.
+    </p>
+  </div>
+
+  <!-- Exercises body -->
+  <div class="ex-body" id="ex-body">
+
+    <!-- ── SINGLE STORY PARAGRAPH ── -->
+    <div class="para-block" id="para-1">
+      <div class="para-label">Nominativ — Story Exercise</div>
+      <div class="para-title">EIN NEUER ANFANG IN BERLIN</div>
+      <p class="para-text" id="para-text-1"></p>
+
+      <div class="ex-actions">
+        <button class="btn-primary" onclick="checkAnswers()">Check Answer</button>
+        <button class="btn-ghost" onclick="resetExercise()">Reset</button>
+      </div>
+    </div>
+
+  </div>
+</div><!-- end #exercise-page -->
+
+
+<!-- ═══════════════════════════════ BRAND GUIDE PAGE ═══════════════════════════════ -->
+<div id="brand-page">
+  <div class="ex-header">
+    <button class="ex-back" onclick="showPage('landing')">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M14 8H2M2 8L7 3M2 8L7 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Back
+    </button>
+    <div>
+      <div style="font-size:10px;font-weight:600;letter-spacing:0.28em;text-transform:uppercase;color:var(--lime);margin-bottom:10px;">Identity System</div>
+      <h1 class="ex-title">BRAND <span class="lime">GUIDE</span></h1>
+      <p class="ex-subtitle">My German Gym — Visual Identity & Design Language</p>
+    </div>
+  </div>
+
+  <div style="padding: 48px 56px 80px;">
+
+    <!-- Logo Showcase -->
+    <div style="margin-bottom: 48px;">
+      <div class="sec-tag" style="margin-bottom:16px;">Logo</div>
+      <div style="display:flex; gap: 2px; flex-wrap: wrap;">
+        <!-- Dark bg -->
+        <div style="background:#090909; border:1px solid #262626; padding:48px 72px; display:flex; align-items:center; gap:18px; flex:1; min-width:280px;">
+          <svg width="52" height="52" viewBox="0 0 44 44" fill="none">
+            <circle cx="22" cy="22" r="21" stroke="#C9FF47" stroke-width="1" opacity="0.25"/>
+            <rect x="6" y="20" width="32" height="4" rx="2" fill="#C9FF47" opacity="0.18"/>
+            <rect x="5" y="14" width="7" height="16" rx="2" fill="#C9FF47"/>
+            <rect x="32" y="14" width="7" height="16" rx="2" fill="#C9FF47"/>
+            <rect x="6.5" y="16" width="4" height="12" rx="1" fill="#0A0A0A" opacity="0.35"/>
+            <rect x="33.5" y="16" width="4" height="12" rx="1" fill="#0A0A0A" opacity="0.35"/>
+            <rect x="17" y="19" width="1.5" height="6" rx="0.5" fill="#C9FF47" opacity="0.6"/>
+            <rect x="20" y="19" width="1.5" height="6" rx="0.5" fill="#C9FF47" opacity="0.6"/>
+            <rect x="23" y="19" width="1.5" height="6" rx="0.5" fill="#C9FF47" opacity="0.6"/>
+            <rect x="26" y="19" width="1.5" height="6" rx="0.5" fill="#C9FF47" opacity="0.6"/>
+          </svg>
+          <div>
+            <div style="font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:0.1em; color:#EEEEE9;">MY GERMAN GYM</div>
+            <div style="font-size:8.5px; font-weight:600; letter-spacing:0.3em; text-transform:uppercase; color:#5A5A5A;">Grammar Training</div>
+          </div>
+        </div>
+        <!-- Light bg -->
+        <div style="background:#EEEEE9; border:1px solid #DDD; padding:48px 72px; display:flex; align-items:center; gap:18px; flex:1; min-width:280px;">
+          <svg width="52" height="52" viewBox="0 0 44 44" fill="none">
+            <circle cx="22" cy="22" r="21" stroke="#090909" stroke-width="1" opacity="0.2"/>
+            <rect x="6" y="20" width="32" height="4" rx="2" fill="#090909" opacity="0.15"/>
+            <rect x="5" y="14" width="7" height="16" rx="2" fill="#090909"/>
+            <rect x="32" y="14" width="7" height="16" rx="2" fill="#090909"/>
+            <rect x="6.5" y="16" width="4" height="12" rx="1" fill="#EEEEE9" opacity="0.35"/>
+            <rect x="33.5" y="16" width="4" height="12" rx="1" fill="#EEEEE9" opacity="0.35"/>
+            <rect x="17" y="19" width="1.5" height="6" rx="0.5" fill="#090909" opacity="0.6"/>
+            <rect x="20" y="19" width="1.5" height="6" rx="0.5" fill="#090909" opacity="0.6"/>
+            <rect x="23" y="19" width="1.5" height="6" rx="0.5" fill="#090909" opacity="0.6"/>
+            <rect x="26" y="19" width="1.5" height="6" rx="0.5" fill="#090909" opacity="0.6"/>
+          </svg>
+          <div>
+            <div style="font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:0.1em; color:#111;">MY GERMAN GYM</div>
+            <div style="font-size:8.5px; font-weight:600; letter-spacing:0.3em; text-transform:uppercase; color:#888;">Grammar Training</div>
+          </div>
+        </div>
+        <!-- Lime accent bg -->
+        <div style="background:#C9FF47; border:1px solid #B0E020; padding:48px 72px; display:flex; align-items:center; gap:18px; flex:1; min-width:280px;">
+          <svg width="52" height="52" viewBox="0 0 44 44" fill="none">
+            <circle cx="22" cy="22" r="21" stroke="#090909" stroke-width="1" opacity="0.3"/>
+            <rect x="6" y="20" width="32" height="4" rx="2" fill="#090909" opacity="0.12"/>
+            <rect x="5" y="14" width="7" height="16" rx="2" fill="#090909"/>
+            <rect x="32" y="14" width="7" height="16" rx="2" fill="#090909"/>
+            <rect x="17" y="19" width="1.5" height="6" rx="0.5" fill="#C9FF47" opacity="0.6"/>
+            <rect x="20" y="19" width="1.5" height="6" rx="0.5" fill="#C9FF47" opacity="0.6"/>
+            <rect x="23" y="19" width="1.5" height="6" rx="0.5" fill="#C9FF47" opacity="0.6"/>
+            <rect x="26" y="19" width="1.5" height="6" rx="0.5" fill="#C9FF47" opacity="0.6"/>
+          </svg>
+          <div>
+            <div style="font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:0.1em; color:#090909;">MY GERMAN GYM</div>
+            <div style="font-size:8.5px; font-weight:600; letter-spacing:0.3em; text-transform:uppercase; color:#444;">Grammar Training</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Colour Palette -->
+    <div style="margin-bottom:48px;">
+      <div class="sec-tag" style="margin-bottom:16px;">Colour Palette</div>
+      <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap:2px;">
+        <div style="padding:28px 24px; background:#090909; border:1px solid #262626;">
+          <div style="font-size:10px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:#5A5A5A;margin-bottom:4px;">Schwarz</div>
+          <div style="font-size:22px;font-family:'Bebas Neue',sans-serif;color:#EEEEE9;">#090909</div>
+          <div style="font-size:10px;color:#5A5A5A;margin-top:4px;">Primary Background</div>
+        </div>
+        <div style="padding:28px 24px; background:#C9FF47; border:1px solid #B0E020;">
+          <div style="font-size:10px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:#444;margin-bottom:4px;">Limette</div>
+          <div style="font-size:22px;font-family:'Bebas Neue',sans-serif;color:#090909;">#C9FF47</div>
+          <div style="font-size:10px;color:#555;margin-top:4px;">Primary Accent</div>
+        </div>
+        <div style="padding:28px 24px; background:#EEEEE9; border:1px solid #DDD;">
+          <div style="font-size:10px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:#888;margin-bottom:4px;">Krem</div>
+          <div style="font-size:22px;font-family:'Bebas Neue',sans-serif;color:#111;">#EEEEE9</div>
+          <div style="font-size:10px;color:#888;margin-top:4px;">Primary Text</div>
+        </div>
+        <div style="padding:28px 24px; background:#181818; border:1px solid #262626;">
+          <div style="font-size:10px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:#5A5A5A;margin-bottom:4px;">Anthrazit</div>
+          <div style="font-size:22px;font-family:'Bebas Neue',sans-serif;color:#EEEEE9;">#181818</div>
+          <div style="font-size:10px;color:#5A5A5A;margin-top:4px;">Surface / Card</div>
+        </div>
+        <div style="padding:28px 24px; background:#FF6B35; border:1px solid #E05520;">
+          <div style="font-size:10px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:#FFF3;margin-bottom:4px;">Orange</div>
+          <div style="font-size:22px;font-family:'Bebas Neue',sans-serif;color:#FFF;">#FF6B35</div>
+          <div style="font-size:10px;color:#FFF5;margin-top:4px;">Warning / Alert</div>
+        </div>
+        <div style="padding:28px 24px; background:#262626; border:1px solid #333;">
+          <div style="font-size:10px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:#5A5A5A;margin-bottom:4px;">Grau</div>
+          <div style="font-size:22px;font-family:'Bebas Neue',sans-serif;color:#EEEEE9;">#262626</div>
+          <div style="font-size:10px;color:#5A5A5A;margin-top:4px;">Borders / Dividers</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Typography -->
+    <div style="margin-bottom:48px;">
+      <div class="sec-tag" style="margin-bottom:16px;">Typography</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:2px;">
+        <div style="padding:40px 36px; background:var(--surface); border:1px solid var(--border);">
+          <div class="type-label">Display — Bebas Neue</div>
+          <div class="type-sample-display">Nominativ</div>
+          <div class="type-meta">Bebas Neue / Tracking +0.03em / Used for: headings, module names, numbers, UI labels</div>
+        </div>
+        <div style="padding:40px 36px; background:var(--surface); border:1px solid var(--border);">
+          <div class="type-label">Serif Body — Cormorant Garamond</div>
+          <div class="type-sample-serif">Der Morgen beginnt früh.</div>
+          <div class="type-meta">Cormorant Garamond Italic / Weight 300 / Used for: exercise text, subtitles, pull-quotes</div>
+        </div>
+        <div style="padding:40px 36px; background:var(--surface); border:1px solid var(--border);">
+          <div class="type-label">UI Sans — Outfit</div>
+          <div class="type-sample-body">Precision exercises for every case, every rule — built like a gym programme for your language skills.</div>
+          <div class="type-meta">Outfit / Weight 300–600 / Used for: UI text, labels, captions, navigation, buttons</div>
+        </div>
+        <div style="padding:40px 36px; background:var(--surface); border:1px solid var(--border);">
+          <div class="type-label">Type Scale</div>
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <div style="font-family:'Bebas Neue',sans-serif; font-size:48px; color:var(--white); line-height:1;">Display / 48–160px</div>
+            <div style="font-family:'Bebas Neue',sans-serif; font-size:28px; color:var(--white); line-height:1;">Heading / 24–36px</div>
+            <div style="font-family:'Cormorant Garamond',serif; font-size:20px; font-style:italic; color:var(--muted2);">Body Serif / 17–24px</div>
+            <div style="font-family:'Outfit',sans-serif; font-size:13px; color:var(--muted2);">UI Sans / 10–14px / Weight 300–600</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Voice & Tone -->
+    <div style="margin-bottom:48px;">
+      <div class="sec-tag" style="margin-bottom:16px;">Voice & Tone</div>
+      <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:2px;">
+        <div style="padding:36px 32px; background:var(--surface); border:1px solid var(--border);">
+          <div style="font-family:'Bebas Neue',sans-serif; font-size:24px; color:var(--lime); margin-bottom:12px;">PRECISE</div>
+          <p style="font-size:13.5px; font-weight:300; color:var(--muted2); line-height:1.65;">Grammar rules are stated clearly, without ambiguity. Every exercise targets one specific structure.</p>
+        </div>
+        <div style="padding:36px 32px; background:var(--surface); border:1px solid var(--border);">
+          <div style="font-family:'Bebas Neue',sans-serif; font-size:24px; color:var(--lime); margin-bottom:12px;">ATHLETIC</div>
+          <p style="font-size:13.5px; font-weight:300; color:var(--muted2); line-height:1.65;">Grammar is a skill you train — the language reflects effort, progress, and repetition. No softening.</p>
+        </div>
+        <div style="padding:36px 32px; background:var(--surface); border:1px solid var(--border);">
+          <div style="font-family:'Bebas Neue',sans-serif; font-size:24px; color:var(--lime); margin-bottom:12px;">ENCOURAGING</div>
+          <p style="font-size:13.5px; font-weight:300; color:var(--muted2); line-height:1.65;">Mistakes are part of training. Feedback is immediate, constructive, and never condescending.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Spacing System -->
+    <div>
+      <div class="sec-tag" style="margin-bottom:16px;">Spacing System</div>
+      <div style="padding:36px; background:var(--surface); border:1px solid var(--border);">
+        <div style="display:flex; gap:2px; align-items:flex-end; flex-wrap:wrap;">
+          <div style="text-align:center;">
+            <div style="width:8px; height:8px; background:var(--lime); margin: 0 auto 8px;"></div>
+            <div style="font-size:9px; color:var(--muted); font-family:monospace;">4px</div>
+          </div>
+          <div style="text-align:center; margin-left:16px;">
+            <div style="width:16px; height:16px; background:var(--lime); margin: 0 auto 8px;"></div>
+            <div style="font-size:9px; color:var(--muted); font-family:monospace;">8px</div>
+          </div>
+          <div style="text-align:center; margin-left:16px;">
+            <div style="width:28px; height:28px; background:var(--lime); margin: 0 auto 8px;"></div>
+            <div style="font-size:9px; color:var(--muted); font-family:monospace;">16px</div>
+          </div>
+          <div style="text-align:center; margin-left:16px;">
+            <div style="width:48px; height:48px; background:var(--lime); margin: 0 auto 8px;"></div>
+            <div style="font-size:9px; color:var(--muted); font-family:monospace;">24px</div>
+          </div>
+          <div style="text-align:center; margin-left:16px;">
+            <div style="width:72px; height:72px; background:var(--lime); margin: 0 auto 8px;"></div>
+            <div style="font-size:9px; color:var(--muted); font-family:monospace;">36px</div>
+          </div>
+          <div style="text-align:center; margin-left:16px;">
+            <div style="width:96px; height:96px; background:var(--lime); margin: 0 auto 8px;"></div>
+            <div style="font-size:9px; color:var(--muted); font-family:monospace;">48px</div>
+          </div>
+          <div style="text-align:center; margin-left:16px;">
+            <div style="width:112px; height:112px; background:var(--lime); margin: 0 auto 8px;"></div>
+            <div style="font-size:9px; color:var(--muted); font-family:monospace;">56px</div>
+          </div>
+        </div>
+        <div style="margin-top:24px; font-size:12px; font-weight:300; color:var(--muted2);">Base unit: 4px. Section padding: 56px. Card padding: 36–40px. Component gap: 16–24px.</div>
+      </div>
+    </div>
+
+  </div>
+</div><!-- end #brand-page -->
+
+
+<!-- ═══════════════════════════════ JAVASCRIPT ═══════════════════════════════ -->
+<script>
+  /* ── Exercise Data ── */
+  const EXERCISES = {
+    nominativ: {
+      paragraphs: [
+        {
+          id: 1,
+          segments: [
+            { type:'blank', n:1,  answer:'Der'  },
+            { type:'text',  t:' Morgen des ersten September beginnt für Felix still und aufregend zugleich. ' },
+            { type:'blank', n:2,  answer:'Er'   },
+            { type:'text',  t:' ist ein junger Grafikdesigner aus Bayern, der heute endlich nach Berlin zieht. Die neue Wohnung liegt in Prenzlauer Berg. ' },
+            { type:'blank', n:3,  answer:'Das'  },
+            { type:'text',  t:' Viertel ist bekannt für seine Cafés, Galerien und jungen Künstler — genau das Richtige für Felix. Am Nachmittag klopft plötzlich jemand an die Tür. ' },
+            { type:'blank', n:4,  answer:'Die'  },
+            { type:'text',  t:' Nachbarin stellt sich als Maria vor. ' },
+            { type:'blank', n:5,  answer:'Sie'  },
+            { type:'text',  t:' ist Journalistin und wohnt seit drei Jahren in der Wohnung nebenan. Am nächsten Morgen entdeckt Felix die Bäckerei um die Ecke. ' },
+            { type:'blank', n:6,  answer:'Der'  },
+            { type:'text',  t:' Bäcker heißt Erik und ist jung, vielleicht Anfang dreißig. ' },
+            { type:'blank', n:7,  answer:'Er'   },
+            { type:'text',  t:' kennt nach nur einer Woche alle Stammkunden beim Namen. „Probieren Sie das", sagt ' },
+            { type:'blank', n:8,  answer:'er'   },
+            { type:'text',  t:' und reicht Felix ein frisches Croissant. „' },
+            { type:'blank', n:9,  answer:'Es'   },
+            { type:'text',  t:' ist das beste in ganz Berlin." Felix lacht und kauft gleich drei. Auf dem Weg zurück trifft ' },
+            { type:'blank', n:10, answer:'er'   },
+            { type:'text',  t:' Maria wieder. ' },
+            { type:'blank', n:11, answer:'Sie'  },
+            { type:'text',  t:' trägt einen Kaffeebecher und lächelt. „Gut geschlafen?", fragt ' },
+            { type:'blank', n:12, answer:'sie'  },
+            { type:'text',  t:'. Felix nickt und lächelt zurück. ' },
+            { type:'blank', n:13, answer:'Das'  },
+            { type:'text',  t:' neue Leben hat offiziell begonnen.' },
+          ]
+        }
+      ]
+    }
+  };
+
+  /* ── Page navigation ── */
+  function showPage(page) {
+    document.getElementById('landing').style.display = 'none';
+    document.getElementById('exercise-page').style.display = 'none';
+    document.getElementById('brand-page').style.display = 'none';
+    if (page === 'landing') {
+      document.getElementById('landing').style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (page === 'exercise') {
+      document.getElementById('exercise-page').style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (page === 'brand') {
+      document.getElementById('brand-page').style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  function scrollToPractice() {
+    showPage('landing');
+    setTimeout(() => {
+      document.getElementById('practice-section').scrollIntoView({ behavior: 'smooth' });
+    }, 50);
+  }
+
+  /* ── Exercise builder ── */
+  let exerciseBuilt = false;
+
+  function startExercise(key) {
+    if (!exerciseBuilt) {
+      buildParagraph(EXERCISES[key].paragraphs[0]);
+      exerciseBuilt = true;
+    }
+    showPage('exercise');
+  }
+
+  function buildParagraph(para) {
+    const container = document.getElementById('para-text-' + para.id);
+    container.innerHTML = '';
+
+    para.segments.forEach(seg => {
+      if (seg.type === 'text') {
+        container.appendChild(document.createTextNode(seg.t));
+      } else {
+        const wrap = document.createElement('span');
+        wrap.className = 'blank-wrap';
+
+        // Green correct answer shown above (hidden until check)
+        const correctLabel = document.createElement('span');
+        correctLabel.className = 'correct-above';
+        correctLabel.textContent = seg.answer;
+        wrap.appendChild(correctLabel);
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'blank-input';
+        input.dataset.answer = seg.answer;
+        input.autocomplete = 'off';
+        input.spellcheck = false;
+        input.autocorrect = 'off';
+        input.autocapitalize = 'off';
+        input.addEventListener('input', () => {
+          // Reset state when user types again after checking
+          input.classList.remove('correct', 'incorrect', 'empty-checked');
+          correctLabel.classList.remove('show');
+        });
+        wrap.appendChild(input);
+        container.appendChild(wrap);
+      }
+    });
+  }
+
+  function checkAnswers() {
+    document.querySelectorAll('.blank-input').forEach(input => {
+      const userAns  = input.value.trim().toLowerCase();
+      const rightAns = input.dataset.answer.toLowerCase();
+      const label    = input.previousElementSibling; // .correct-above
+
+      input.classList.remove('correct', 'incorrect', 'empty-checked');
+      label.classList.remove('show');
+
+      if (userAns === '') {
+        // Empty — show correct answer above, highlight underline green-faint
+        input.classList.add('empty-checked');
+        label.classList.add('show');
+      } else if (userAns === rightAns) {
+        // Correct — green text
+        input.classList.add('correct');
+      } else {
+        // Wrong — strikethrough red + correct above in green
+        input.classList.add('incorrect');
+        label.classList.add('show');
+      }
+    });
+  }
+
+  function resetExercise() {
+    document.querySelectorAll('.blank-input').forEach(input => {
+      input.value = '';
+      input.classList.remove('correct', 'incorrect', 'empty-checked');
+      input.previousElementSibling.classList.remove('show');
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  /* ── Scroll fade-in observer ── */
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+  function initObserver() {
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    initObserver();
+    // Trigger hero elements immediately
+    setTimeout(() => {
+      document.querySelectorAll('.hero .fade-up').forEach((el, i) => {
+        setTimeout(() => el.classList.add('visible'), i * 120);
+      });
+    }, 100);
+  });
+</script>
+</body>
+</html>

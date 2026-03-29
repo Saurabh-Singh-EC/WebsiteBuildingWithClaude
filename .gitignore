@@ -1,0 +1,23 @@
+# Screenshots (dev only)
+temporary screenshots/
+screenshot.mjs
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Environment variables
+.env
+.env.local
+.env*.local
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
